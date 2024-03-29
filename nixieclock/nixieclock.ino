@@ -77,8 +77,9 @@ void setup() {
 
   // daylight saving time hack
   // last Sunday of March: h += 1
-    if ((RTC.dow == 1) && (RTC.mm == 3) && (25 <= RTC.dd <= 31) && (RTC.h > 3)) {
+    if ((RTC.dow == 1) && (RTC.mm == 3) && (25 <= RTC.dd <= 31)) {
       RTC.h = RTC.h + 1;
+      RTC.writeTime();
         // one shifting leftward
         writenumber(0, 0);
         writenumber(1, 0);
@@ -101,8 +102,9 @@ void setup() {
         writenumber(3, 0);
         delay(1000);
         // last Sunday of October: h -= 1
-    } else if ((RTC.dow == 1) && (RTC.mm == 10) && (25 <= RTC.dd <= 31) && (RTC.h > 3)) {
+    } else if ((RTC.dow == 1) && (RTC.mm == 10) && (25 <= RTC.dd <= 31)) {
       RTC.h = RTC.h - 1;
+      RTC.writeTime();
         // one shifting rightward
         writenumber(0, 1);
         writenumber(1, 0);
