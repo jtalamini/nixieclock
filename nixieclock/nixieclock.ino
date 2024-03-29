@@ -28,13 +28,8 @@ int three;
 int hour;
 int minute;
 
-String command;
-//int test = 0;
-
 // time programming using https://github.com/MajicDesigns/MD_DS1307/tree/master
 // MD_DS1307 test sketch
-// in serial (set baud to 57600)
-// tw 20240218 084900 6
 
 void setup() {
   pinMode(A1, OUTPUT);
@@ -63,11 +58,9 @@ void setup() {
   if (!RTC.isRunning())
     RTC.control(DS1307_CLOCK_HALT, DS1307_OFF);
 
-  // WARNING: la porta seriale attiva non fa funzionare correttamente l'orologio
-  // utilizzare SOLO per configurare l'ora e poi rimuovere!!!!
+  // WARNING: serial communication prevent the clock for working at the same time, thus serial is disabled here
   //Serial.begin(9600);
-  //showHelp();
-
+  
   // welcome message
   // 18 02
   writenumber(0, 1);
@@ -83,14 +76,10 @@ void setup() {
   delay(2000);
 
   // daylight saving time hack
-  // ora legale:domenica 30-31 marzo: h += 1
-  // if (weekday == Sunday && month == 3 && 25 <= day <= 31 && hour > 3) { hour += 1
-    // ora solare:
-  // domenica 27 ottobre: h -= 1
-  // if (weekday == Sunday && month == 10 && 25 <= day <= 31 && hour > 3) { hour -= 1
+  // last Sunday of March: h += 1
     if ((RTC.dow == 1) && (RTC.mm == 3) && (25 <= RTC.dd <= 31) && (RTC.h > 3)) {
       RTC.h = RTC.h + 1;
-        // one shifting leftwards
+        // one shifting leftward
         writenumber(0, 0);
         writenumber(1, 0);
         writenumber(2, 0);
@@ -111,6 +100,7 @@ void setup() {
         writenumber(2, 0);
         writenumber(3, 0);
         delay(1000);
+        // last Sunday of October: h -= 1
     } else if ((RTC.dow == 1) && (RTC.mm == 10) && (25 <= RTC.dd <= 31) && (RTC.h > 3)) {
       RTC.h = RTC.h - 1;
         // one shifting rightward
@@ -146,53 +136,11 @@ void loop() {
   two =  (minute / 10) % 10;
   three = minute % 10;
 
-  
   writenumber(0, zero);
   writenumber(1, one);
   writenumber(2, two);
   writenumber(3, three);
-  
-  /*
-  writenumber(0, test);
-  writenumber(1, test);
-  writenumber(2, test);
-  writenumber(3, test);
-  */
-
   delay(1000);
-  /*
-  test = test +1;
-  if (test > 9) {
-    test = 0;
-  }
-  */
-
-  /*
-  if (Serial.available() > 0) {
-    command = Serial.readStringUntil("\n");
-    if (command.substring(0, 2)=="wt") {
-      RTC.h = command.substring(2, 4).toInt();
-      RTC.m = command.substring(4,6).toInt();
-      RTC.s = 0;
-      RTC.writeTime();
-      Serial.print("[ ^.^ ] time configured to: ");
-      Serial.print(RTC.h);
-      Serial.print(" : ");
-      Serial.print(RTC.m);
-      Serial.println();
-    } else if (command.substring(0, 2)=="rt") {
-      Serial.print("[ ^.^ ] current time is: ");
-      Serial.print(RTC.h);
-      Serial.print(" : ");
-      Serial.print(RTC.m);
-      Serial.println();
-    } else if (command.substring(0,4)=="help") {
-      showHelp();
-    } else {
-      Serial.println("[ X.X ] Invalid data!");
-    }
-  }
-  */
 }
 
 void writenumber(int a, int b) {
