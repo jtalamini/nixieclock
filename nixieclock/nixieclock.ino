@@ -77,6 +77,8 @@ void setup() {
 
   // daylight saving time hack
   // last Sunday of March: h += 1
+  RTC.readTime();
+  
     if ((RTC.dow == 1) && (RTC.mm == 3) && (25 <= RTC.dd <= 31)) {
       RTC.h = RTC.h + 1;
       RTC.writeTime();
